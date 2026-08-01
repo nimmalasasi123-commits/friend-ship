@@ -171,20 +171,86 @@
 
     </div>
 
+    <div class="gallery-actions">
+        <button id="galleryNextBtn">Continue to Our Journey ❤️</button>
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Journey / Continue Page -->
+<!-- ========================= -->
+
+<section id="journeySection" class="hidden">
+
+    <div class="glass-card journey-card">
+
+        <h2>Ready for the Next Part? ✨</h2>
+
+        <p>Your photo memories are complete. Now it’s time to continue to the special video made just for you.</p>
+
+        <button id="journeyContinueBtn">Continue to Video ❤️</button>
+
+    </div>
+
 </section>
 
 <!-- ========================= -->
 <!-- Timeline -->
-<!-- (Coming Later) -->
 <!-- ========================= -->
 
 <section id="timeline" class="hidden">
 
-    <h1>
+    <div class="timeline-card">
 
-        Our Journey
+        <h1>Our Journey</h1>
 
-    </h1>
+        <div class="timeline-list">
+            <div class="timeline-item">
+                <h3>01. First Hello</h3>
+                <p>A simple hello became the start of a beautiful friendship.</p>
+            </div>
+            <div class="timeline-item">
+                <h3>02. Shared Laughs</h3>
+                <p>Every laugh, every story, and every silly moment made us closer.</p>
+            </div>
+            <div class="timeline-item">
+                <h3>03. Endless Memories</h3>
+                <p>No matter the distance, our bond still shines bright.</p>
+            </div>
+        </div>
+
+        <button id="timelineNextBtn">Watch Special Video</button>
+
+    </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Special Video -->
+<!-- ========================= -->
+
+<section id="videoSection" class="hidden">
+
+    <div class="video-card">
+
+        <h2 id="videoTitle">Special Video For You 💖</h2>
+
+        <p>This one is especially for you, my dear friend.</p>
+
+        <video id="specialVideo" controls playsinline preload="metadata">
+            <source src="video 1.mp4" type="video/mp4">
+        </video>
+
+        <div id="videoPopup" class="video-popup hidden">
+            <h3>One More Video For You 🫶😊</h3>
+            <p>Just for you, kuttii 💖</p>
+            <button id="secondVideoBtn">Watch One More Video</button>
+        </div>
+
+        <button id="finalBtn" class="hidden">Finish Journey</button>
+
+    </div>
 
 </section>
 
@@ -240,7 +306,7 @@
 
 <audio id="bgMusic" loop>
 
-    <source src="music/friendship.mp3" type="audio/mpeg">
+    <source src="song.mp3" type="audio/mpeg">
 
 </audio>
 

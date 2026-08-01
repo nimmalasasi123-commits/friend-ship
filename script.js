@@ -24,6 +24,18 @@ const heroSection = document.querySelector(".hero");
 const heartsContainer = document.querySelector(".hearts");
 
 const music = document.getElementById("bgMusic");
+const galleryNextBtn = document.getElementById("galleryNextBtn");
+const timelineNextBtn = document.getElementById("timelineNextBtn");
+const finalBtn = document.getElementById("finalBtn");
+const specialVideo = document.getElementById("specialVideo");
+const videoPopup = document.getElementById("videoPopup");
+const secondVideoBtn = document.getElementById("secondVideoBtn");
+const videoTitle = document.getElementById("videoTitle");
+const timeline = document.getElementById("timeline");
+const journeySection = document.getElementById("journeySection");
+const journeyContinueBtn = document.getElementById("journeyContinueBtn");
+const videoSection = document.getElementById("videoSection");
+const ending = document.getElementById("ending");
 
 /* ==========================================
    Loading Screen
@@ -83,19 +95,10 @@ startBtn.onclick = () => {
 continueBtn.onclick = () => {
 
     const name = friendName.value.trim();
-    const normalized = name.toLowerCase();
 
     if (name === "") {
 
         alert("Please enter your name ❤️");
-
-        return;
-
-    }
-
-    if (normalized !== "neelima") {
-
-        alert("Sorry, this was made only foryou Kuttii 😊");
 
         return;
 
@@ -112,6 +115,8 @@ continueBtn.onclick = () => {
         behavior: "smooth"
     });
 
+    music.currentTime = 0;
+    music.volume = 0.6;
     music.play().catch(() => {});
 
 };
@@ -121,16 +126,73 @@ continueBtn.onclick = () => {
 ========================================== */
 
 nextBtn.onclick = () => {
-    current = 0;
     welcomeSection.classList.add("hidden");
     gallery.classList.remove("hidden");
     gallery.style.opacity = "0";
     fadeIn(gallery);
-    showSlide(current);
+    startSlideshow();
     gallery.scrollIntoView({
         behavior: "smooth"
     });
 };
+
+galleryNextBtn.onclick = () => {
+    showJourneySection();
+};
+
+timelineNextBtn.onclick = () => {
+    showJourneySection();
+};
+
+journeyContinueBtn.onclick = () => {
+    showVideoSection();
+};
+
+finalBtn.onclick = () => {
+    videoSection.classList.add("hidden");
+    ending.classList.remove("hidden");
+    fadeIn(ending);
+    ending.scrollIntoView({
+        behavior: "smooth"
+    });
+};
+
+let videoFlowState = "first";
+
+function playVideo(fileName, title) {
+    if (!specialVideo) return;
+
+    specialVideo.src = fileName;
+    specialVideo.load();
+
+    if (videoTitle) {
+        videoTitle.textContent = title;
+    }
+
+    specialVideo.play().catch(() => {});
+}
+
+if (specialVideo) {
+    specialVideo.addEventListener("ended", () => {
+        if (videoFlowState === "first") {
+            videoFlowState = "waiting";
+            videoPopup.classList.remove("hidden");
+        } else {
+            finalBtn.classList.remove("hidden");
+            finalBtn.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    });
+}
+
+if (secondVideoBtn) {
+    secondVideoBtn.onclick = () => {
+        videoPopup.classList.add("hidden");
+        videoFlowState = "second";
+        playVideo("video 2.mp4", "One More Video For You 🫶😊");
+    };
+}
 
 /* ==========================================
    Floating Hearts
@@ -301,6 +363,9 @@ const texts = [
 ];
 
 let current = 0;
+let slideshowTimer = null;
+let slideshowCycleTimer = null;
+const slideDuration = 4800;
 
 function showSlide(index) {
     slideImage.style.opacity = "0";
@@ -324,15 +389,58 @@ function showSlide(index) {
     }
 }
 
+function showJourneySection() {
+    document.querySelectorAll("section").forEach(section => {
+        if (section !== journeySection) {
+            section.classList.add("hidden");
+        }
+    });
+
+    journeySection.classList.remove("hidden");
+    fadeIn(journeySection);
+    journeySection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+    clearInterval(slideshowTimer);
+    clearTimeout(slideshowCycleTimer);
+}
+
+function showVideoSection() {
+    document.querySelectorAll("section").forEach(section => {
+        if (section !== videoSection) {
+            section.classList.add("hidden");
+        }
+    });
+
+    videoSection.classList.remove("hidden");
+    fadeIn(videoSection);
+    videoSection.scrollIntoView({
+        behavior: "smooth"
+    });
+
+    clearInterval(slideshowTimer);
+    clearTimeout(slideshowCycleTimer);
+
+    if (music) {
+        music.pause();
+        music.currentTime = 0;
+    }
+
+    videoFlowState = "first";
+    videoPopup.classList.add("hidden");
+    finalBtn.classList.add("hidden");
+
+    if (specialVideo) {
+        specialVideo.currentTime = 0;
+        playVideo("video 1.mp4", "Special Video For You 💖");
+    }
+}
+
 /* Next */
 
 function nextSlide() {
-    current++;
-
-    if (current >= images.length) {
-        current = 0;
-    }
-
+    current = (current + 1) % images.length;
     showSlide(current);
 }
 
@@ -348,12 +456,23 @@ function previousSlide() {
     showSlide(current);
 }
 
+function startSlideshow() {
+    current = 0;
+    showSlide(current);
+
+    clearInterval(slideshowTimer);
+    clearTimeout(slideshowCycleTimer);
+
+    slideshowTimer = setInterval(nextSlide, slideDuration);
+
+    slideshowCycleTimer = setTimeout(() => {
+        clearInterval(slideshowTimer);
+        showJourneySection();
+    }, slideDuration * images.length);
+}
+
 nextSlideBtn.onclick = nextSlide;
 previousBtn.onclick = previousSlide;
 
 showSlide(0);
-
-/* Auto Slide */
-
-setInterval(nextSlide, 5000);
 
