@@ -136,9 +136,11 @@ nextBtn.onclick = () => {
     });
 };
 
-galleryNextBtn.onclick = () => {
-    showJourneySection();
-};
+if (galleryNextBtn) {
+    galleryNextBtn.onclick = () => {
+        showJourneySection();
+    };
+}
 
 timelineNextBtn.onclick = () => {
     showJourneySection();
