@@ -366,10 +366,17 @@ const texts = [
 
 let current = 0;
 let slideshowTimer = null;
-let slideshowCycleTimer = null;
 const slideDuration = 4800;
 
+function clearSlideshowTimer() {
+    if (slideshowTimer) {
+        clearTimeout(slideshowTimer);
+        slideshowTimer = null;
+    }
+}
+
 function showSlide(index) {
+    current = index;
     slideImage.style.opacity = "0";
     slideImage.style.transition = "opacity 0.5s ease";
 
@@ -404,8 +411,7 @@ function showJourneySection() {
         behavior: "smooth"
     });
 
-    clearInterval(slideshowTimer);
-    clearTimeout(slideshowCycleTimer);
+    clearSlideshowTimer();
 }
 
 function showVideoSection() {
@@ -421,8 +427,7 @@ function showVideoSection() {
         behavior: "smooth"
     });
 
-    clearInterval(slideshowTimer);
-    clearTimeout(slideshowCycleTimer);
+    clearSlideshowTimer();
 
     if (music) {
         music.pause();
@@ -439,38 +444,46 @@ function showVideoSection() {
     }
 }
 
+function scheduleNextSlide() {
+    clearSlideshowTimer();
+
+    slideshowTimer = setTimeout(() => {
+        if (current >= images.length - 1) {
+            showJourneySection();
+        } else {
+            showSlide(current + 1);
+            scheduleNextSlide();
+        }
+    }, slideDuration);
+}
+
 /* Next */
 
 function nextSlide() {
-    current = (current + 1) % images.length;
-    showSlide(current);
+    if (current >= images.length - 1) {
+        showJourneySection();
+        return;
+    }
+
+    showSlide(current + 1);
+    scheduleNextSlide();
 }
 
 /* Previous */
 
 function previousSlide() {
-    current--;
-
-    if (current < 0) {
-        current = images.length - 1;
+    if (current <= 0) {
+        showSlide(0);
+    } else {
+        showSlide(current - 1);
     }
 
-    showSlide(current);
+    scheduleNextSlide();
 }
 
 function startSlideshow() {
-    current = 0;
-    showSlide(current);
-
-    clearInterval(slideshowTimer);
-    clearTimeout(slideshowCycleTimer);
-
-    slideshowTimer = setInterval(nextSlide, slideDuration);
-
-    slideshowCycleTimer = setTimeout(() => {
-        clearInterval(slideshowTimer);
-        showJourneySection();
-    }, slideDuration * images.length);
+    showSlide(0);
+    scheduleNextSlide();
 }
 
 nextSlideBtn.onclick = nextSlide;
