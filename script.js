@@ -24,6 +24,9 @@ const heroSection = document.querySelector(".hero");
 const heartsContainer = document.querySelector(".hearts");
 
 const music = document.getElementById("bgMusic");
+const tapSound = document.getElementById("tapSound");
+const endMusic = document.getElementById("endMusic");
+const touchEffectLayer = document.getElementById("touchEffectLayer");
 const galleryNextBtn = document.getElementById("galleryNextBtn");
 const timelineNextBtn = document.getElementById("timelineNextBtn");
 const finalBtn = document.getElementById("finalBtn");
@@ -157,6 +160,12 @@ finalBtn.onclick = () => {
     ending.scrollIntoView({
         behavior: "smooth"
     });
+
+    if (endMusic) {
+        endMusic.currentTime = 0;
+        endMusic.volume = 0.7;
+        endMusic.play().catch(() => {});
+    }
 };
 
 let videoFlowState = "first";
@@ -244,6 +253,51 @@ function fadeIn(element) {
     element.style.opacity = "1";
 
 }
+
+function createTapBubble(x, y) {
+    if (!touchEffectLayer) return;
+
+    for (let i = 0; i < 4; i++) {
+        const bubble = document.createElement("span");
+        bubble.classList.add("tap-bubble");
+
+        const size = 18 + Math.random() * 30;
+        bubble.style.width = `${size}px`;
+        bubble.style.height = `${size}px`;
+        bubble.style.left = `${x + (Math.random() * 80 - 40)}px`;
+        bubble.style.top = `${y + (Math.random() * 80 - 40)}px`;
+        bubble.style.animationDuration = `${0.9 + Math.random() * 0.6}s`;
+        bubble.style.opacity = "0.9";
+
+        touchEffectLayer.appendChild(bubble);
+
+        setTimeout(() => bubble.remove(), 1200);
+    }
+
+    const dot = document.createElement("span");
+    dot.classList.add("tap-dot");
+    dot.style.left = `${x}px`;
+    dot.style.top = `${y}px`;
+    touchEffectLayer.appendChild(dot);
+
+    setTimeout(() => dot.remove(), 550);
+}
+
+function playTapSound() {
+    if (!tapSound) return;
+    tapSound.currentTime = 0;
+    tapSound.volume = 0.8;
+    tapSound.play().catch(() => {});
+}
+
+function handleTap(event) {
+    const x = event.clientX;
+    const y = event.clientY;
+    playTapSound();
+    createTapBubble(x, y);
+}
+
+document.addEventListener("pointerdown", handleTap, {passive: true});
 
 /* ==========================================
    Apply Fade

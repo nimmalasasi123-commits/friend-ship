@@ -16,7 +16,11 @@ html{
 
 body{
     overflow:hidden;
-    background:#000;
+    background:#02010f;
+    background-image:
+        radial-gradient(circle at 15% 20%, rgba(255,73,160,0.18), transparent 16%),
+        radial-gradient(circle at 85% 25%, rgba(0,212,255,0.12), transparent 14%),
+        radial-gradient(circle at 50% 85%, rgba(138,85,255,0.08), transparent 20%);
     color:#fff;
     min-height:100vh;
 }
@@ -33,13 +37,14 @@ body::before{
     left:-100%;
     top:-100%;
     background:
-    radial-gradient(circle,#ff4d6d 0%,transparent 20%),
-    radial-gradient(circle,#ff85a2 0%,transparent 20%),
-    radial-gradient(circle,#7b2ff7 0%,transparent 20%),
-    radial-gradient(circle,#00c6ff 0%,transparent 20%);
-    animation:moveBG 18s linear infinite;
+        radial-gradient(circle, #ff4d6d 0%, transparent 22%),
+        radial-gradient(circle, #ff85a2 0%, transparent 22%),
+        radial-gradient(circle, #7b2ff7 0%, transparent 22%),
+        radial-gradient(circle, #00c6ff 0%, transparent 22%);
+    animation:moveBG 20s linear infinite;
     z-index:-2;
-    opacity:.35;
+    opacity:.45;
+    filter:blur(16px);
 }
 
 @keyframes moveBG{
@@ -58,7 +63,11 @@ body::after{
 content:"";
 position:fixed;
 inset:0;
-background:linear-gradient(135deg,#0f172a,#111827,#1e293b);
+background:
+    linear-gradient(135deg, rgba(8,10,25,0.94), rgba(14,17,37,0.98)),
+    radial-gradient(circle at 20% 20%, rgba(255,0,154,0.12), transparent 18%),
+    radial-gradient(circle at 80% 18%, rgba(0,226,255,0.10), transparent 14%),
+    radial-gradient(circle at 50% 82%, rgba(142,72,255,0.08), transparent 22%);
 z-index:-3;
 }
 
@@ -631,7 +640,62 @@ inset:0;
 pointer-events:none;
 
 }
+#touchEffectLayer {
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:999;
+    overflow:hidden;
+}
 
+.tap-bubble,
+.tap-dot {
+    position:absolute;
+    border-radius:50%;
+    pointer-events:none;
+    mix-blend-mode:screen;
+}
+
+.tap-bubble {
+    border:2px solid rgba(255,255,255,0.8);
+    background:radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,85,160,0.18) 40%, transparent 100%);
+    box-shadow:0 0 22px rgba(255,130,185,0.7);
+    transform:translate(-50%, -50%) scale(0.8);
+    animation:riseBubble 1.2s ease-out forwards;
+}
+
+.tap-dot {
+    width:14px;
+    height:14px;
+    background:rgba(255,255,255,0.95);
+    box-shadow:0 0 20px rgba(0,190,255,0.8), 0 0 26px rgba(255,77,109,0.8);
+    transform:translate(-50%, -50%) scale(1);
+    animation:tapPulse 0.55s ease-out forwards;
+}
+
+@keyframes riseBubble {
+    0% {
+        opacity:0.95;
+        transform:translate(-50%, -50%) scale(0.8);
+        filter:blur(0px);
+    }
+    100% {
+        opacity:0;
+        transform:translate(-50%, -180%) scale(1.6);
+        filter:blur(2px);
+    }
+}
+
+@keyframes tapPulse {
+    0% {
+        opacity:1;
+        transform:translate(-50%, -50%) scale(0.9);
+    }
+    100% {
+        opacity:0;
+        transform:translate(-50%, -50%) scale(1.7);
+    }
+}
 /* ===========================================
    FULL SCREEN SLIDESHOW
 =========================================== */
